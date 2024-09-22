@@ -1,16 +1,25 @@
 <?php
+
 /**
- * Project SDF Initializer
- * devsimsek software development framework.
- * Copyright devsimsek
+ * Copyright 2024 Devsimsek & The NoteBud Backend Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * @package     SDF
  * @file        __init.php
- * @version     v1.5.0
- * @author      devsimsek
- * @copyright   Copyright (c) 2022, smskSoft, devsimsek
- * @license     https://opensource.org/licenses/MIT	MIT License
- * @url         https://github.com/devsimsek/project-sdf/
- * @since       v1.0
+ * @version     v1.5.1
+ * @since       v1.5
+ * @author      devsimsek, The NoteBud Backend Team
+ * @url         https://github.com/NoteBud/project-sdf/
  * @filesource
  */
 if (!defined("SDF") and !SDF) {
@@ -19,7 +28,7 @@ if (!defined("SDF") and !SDF) {
     );
     exit(1);
 }
-const SDF_VERSION = 1.5;
+const SDF_VERSION = "1.5.1";
 
 // Check minimum version requirement of this framework.
 if (version_compare(PHP_VERSION, "8.0.0") <= 0) {
@@ -79,10 +88,16 @@ foreach ($initializer::core_getConfig("routes") as $route => $controller) {
 $bm->mark("__sdf__router__start__");
 $router::ignite();
 if (SDF_Benchmark) {
-    print_r(
-        '<script>console.log("SDF RENDERER DEBUG: Total Benchmark Result: ' .
-            $bm->elapsed_time("__sdf__router__start__") .
-            'ms.");</script>'
-    );
+    // check sent mime, if it is html, print benchmark results.
+    if (
+        isset($_SERVER["HTTP_ACCEPT"]) and
+        strpos($_SERVER["HTTP_ACCEPT"], "text/html") !== false
+    ) {
+        print_r(
+            '<script>console.log("SDF RENDERER DEBUG: Total Benchmark Result: ' .
+                $bm->elapsed_time("__sdf__router__start__") .
+                'ms.");</script>'
+        );
+    }
 }
 // And This Is All :) Sdf must be initialized by now :)

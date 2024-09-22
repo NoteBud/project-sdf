@@ -1,18 +1,27 @@
 <?php
 /**
- * Project SDF
- * devsimsek software development framework.
- * Copyright devsimsek
+ * Copyright 2024 Devsimsek & The NoteBud Backend Team
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  * @package     SDF
  * @file        index.php
- * @version     v1.5.0
- * @author      devsimsek
- * @copyright   Copyright (c) 2022, smskSoft, devsimsek
- * @license     https://opensource.org/licenses/MIT	MIT License
- * @url         https://github.com/devsimsek/project-sdf/
- * @since       v1.0
+ * @version     v1.5.1
+ * @since       v1.5
+ * @author      devsimsek, The NoteBud Backend Team
+ * @url         https://github.com/NoteBud/project-sdf/
  * @filesource
  */
+
 const SDF = true;
 
 // -----------------------------------------------
@@ -25,7 +34,6 @@ const SDF = true;
  * competitors laravel, codeigniter.
  * You can check the details from our
  * webpage later.
- * Source: https://sdf.smsk.me/docs/fuse
  */
 const USE_FUSE = true;
 
@@ -79,6 +87,8 @@ $SDF_APP_HELP = "helpers";
 $SDF_APP_LIB = "libraries";
 $SDF_APP_MODL = "models";
 $SDF_APP_MIDD = "middlewares";
+$SDF_APP_MIGR = "migrations";
+$SDF_APP_SEED = "seeds";
 
 // -----------------------------------------------
 
@@ -172,6 +182,8 @@ define("SDF_APP_HELP", SDF_APP . $SDF_APP_HELP . DIRECTORY_SEPARATOR);
 define("SDF_APP_LIB", SDF_APP . $SDF_APP_LIB . DIRECTORY_SEPARATOR);
 define("SDF_APP_MODL", SDF_APP . $SDF_APP_MODL . DIRECTORY_SEPARATOR);
 define("SDF_APP_MIDD", SDF_APP . $SDF_APP_MIDD . DIRECTORY_SEPARATOR);
+define("SDF_APP_MIGR", SDF_APP . $SDF_APP_MIGR . DIRECTORY_SEPARATOR);
+define("SDF_APP_SEED", SDF_APP . $SDF_APP_SEED . DIRECTORY_SEPARATOR);
 if (!file_exists($SDF_DIR)) {
     if (file_exists(SDF_ROOT . "/sdf/")) {
         define("SDF_DIR", SDF_ROOT . "/sdf/");

@@ -26,5 +26,5 @@ $config["rc_magicRouting"] = false;
  * ------- ~ ------- ~ ------- ~ ------- ~ -------
  * Access with prefix app_
  */
-$config["app_version"] = "v1.0";
-$config["app_title"] = "My new sdf powered application";
+$config["app_version"] = "v1.0.0";
+$config["app_title"] = "NoteBud Development Framework";
