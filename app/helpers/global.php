@@ -8,11 +8,6 @@ if (!defined("SDF")) {
 // This section is for the variable functions.
 // These functions are used to manipulate variables.
 
-function is_empty(mixed $var): bool
-{
-    return empty($var);
-}
-
 function is_url(string $url): bool
 {
     return filter_var($url, FILTER_VALIDATE_URL) !== false;
@@ -26,6 +21,22 @@ function is_email(string $email): bool
 function is_ip(string $ip): bool
 {
     return filter_var($ip, FILTER_VALIDATE_IP) !== false;
+}
+
+function is_json(string $json): bool
+{
+    json_decode($json);
+    return json_last_error() === JSON_ERROR_NONE;
+}
+
+function is_base64(string $base64): bool
+{
+    return base64_encode(base64_decode($base64)) === $base64;
+}
+
+function is_serialized(string $serialized): bool
+{
+    return @unserialize($serialized) !== false;
 }
 
 // File i/o

@@ -8,15 +8,11 @@
  * @param string $string
  * @return string
  */
-function toCamelCase($string)
+function toCamelCase(string $string): string
 {
-    $result = str_replace(
-        " ",
-        "",
-        ucwords(str_replace(["-", "_"], " ", $string))
+    return lcfirst(
+        str_replace(" ", "", ucwords(str_replace("_", " ", $string)))
     );
-    $result[0] = strtolower($result[0]);
-    return $result;
 }
 
 /**
@@ -25,7 +21,7 @@ function toCamelCase($string)
  * @param string $string
  * @return string
  */
-function toSnakeCase($string)
+function toSnakeCase(string $string): string
 {
     return strtolower(preg_replace("/[A-Z]/", '_$0', lcfirst($string)));
 }
@@ -38,8 +34,11 @@ function toSnakeCase($string)
  * @param string $ellipsis
  * @return string
  */
-function truncateString($string, $limit = 100, $ellipsis = "...")
-{
+function truncateString(
+    string $string,
+    int $limit = 100,
+    string $ellipsis = "..."
+): string {
     if (strlen($string) > $limit) {
         return substr($string, 0, $limit) . $ellipsis;
     }
@@ -52,7 +51,7 @@ function truncateString($string, $limit = 100, $ellipsis = "...")
  * @param string $string
  * @return string
  */
-function removeNonAlphaNumeric($string)
+function removeNonAlphaNumeric(string $string): string
 {
     return preg_replace("/[^a-zA-Z0-9]/", "", $string);
 }
@@ -63,7 +62,7 @@ function removeNonAlphaNumeric($string)
  * @param string $string
  * @return string
  */
-function reverseString($string)
+function reverseString(string $string): string
 {
     return strrev($string);
 }
@@ -76,7 +75,7 @@ function reverseString($string)
  * @param string $string
  * @return string
  */
-function createSlug($string)
+function createSlug(string $string): string
 {
     // Convert to lowercase
     $string = strtolower($string);
@@ -99,7 +98,7 @@ function createSlug($string)
  * @param array $stopWords
  * @return string
  */
-function removeStopWords($string, $stopWords = [])
+function removeStopWords(string $string, array $stopWords = []): string
 {
     if (empty($stopWords)) {
         $stopWords = ["the", "and", "of", "in", "a", "to", "for", "with"]; // Example stop words
@@ -118,7 +117,7 @@ function removeStopWords($string, $stopWords = [])
  * @param int $maxLength
  * @return string
  */
-function seoTitleLimit($title, $maxLength = 60)
+function seoTitleLimit(string $title, int $maxLength = 60): string
 {
     return truncateString($title, $maxLength, "");
 }
@@ -131,7 +130,7 @@ function seoTitleLimit($title, $maxLength = 60)
  * @param string $string
  * @return string
  */
-function sanitizeForOutput($string)
+function sanitizeForOutput(string $string): string
 {
     return htmlspecialchars($string, ENT_QUOTES, "UTF-8");
 }
@@ -140,12 +139,22 @@ function sanitizeForOutput($string)
  * Sanitize input for SQL queries to prevent SQL Injection.
  *
  * @param string $string
- * @param mysqli $connection
+ * @param mixed $connection
+ * @param int $mode
  * @return string
  */
-function sanitizeForSQL($string, $connection)
-{
-    return mysqli_real_escape_string($connection, $string);
+function sanitizeForSQL(
+    string $string,
+    mixed $connection = [],
+    int $mode = 0
+): string {
+    if ($mode === 0) {
+        return addslashes($string);
+    } elseif ($mode === 1) {
+        return $connection->quote($string);
+    } elseif ($mode === 2) {
+        return $connection->real_escape_string($string);
+    }
 }
 
 /**
@@ -154,7 +163,7 @@ function sanitizeForSQL($string, $connection)
  * @param int $length
  * @return string
  */
-function generateSecureToken($length = 32)
+function generateSecureToken(int $length = 32): string
 {
     return bin2hex(random_bytes($length / 2));
 }
@@ -165,7 +174,7 @@ function generateSecureToken($length = 32)
  * @param string $email
  * @return bool
  */
-function isValidEmail($email)
+function isValidEmail(string $email): bool
 {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 }
@@ -175,7 +184,7 @@ function isValidEmail($email)
  *
  * @return string|null
  */
-function getUserIP()
+function getUserIP(): ?string
 {
     $ipKeys = [
         "HTTP_CLIENT_IP",
@@ -204,7 +213,7 @@ function getUserIP()
  * @param string $ip
  * @return bool
  */
-function isValidIPv4($ip)
+function isValidIPv4(string $ip): bool
 {
     return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) !== false;
 }
@@ -215,7 +224,7 @@ function isValidIPv4($ip)
  * @param string $ip
  * @return bool
  */
-function isValidIPv6($ip)
+function isValidIPv6(string $ip): bool
 {
     return filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) !== false;
 }
@@ -226,7 +235,7 @@ function isValidIPv6($ip)
  * @param string $ip
  * @return bool
  */
-function isPrivateIP($ip)
+function isPrivateIP(string $ip): bool
 {
     if (!isValidIPv4($ip)) {
         return false;
@@ -256,7 +265,7 @@ function isPrivateIP($ip)
  * @param string $ip
  * @return string|null
  */
-function getIPVersion($ip)
+function getIPVersion(string $ip): ?string
 {
     if (isValidIPv4($ip)) {
         return "IPv4";

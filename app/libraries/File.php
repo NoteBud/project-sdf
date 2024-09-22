@@ -33,7 +33,7 @@ class File
     // @param string $path
     // @param string $mode
     // @return bool
-    public function open(string $path, string $mode): bool
+    public function open(string $path, string $mode = "r"): bool
     {
         // Retreive the content of the remote file.
         if (str_starts_with($path, "http")) {
