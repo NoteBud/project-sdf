@@ -50,6 +50,10 @@ class Session
             session_start();
         }
 
+        if (empty($_SESSION)) {
+            $_SESSION = [];
+        }
+
         self::$session = $_SESSION;
         self::$temp = self::$session;
     }
@@ -88,10 +92,7 @@ class Session
     // @return bool
     public static function has(string $key): bool
     {
-        if (!empty(self::$temp[$key]) || !isset(self::$temp[$key])) {
-            return false
-        }
-        return true;
+        return !empty(self::$temp[$key]) || isset(self::$temp[$key]);
     }
 
     // Save the session

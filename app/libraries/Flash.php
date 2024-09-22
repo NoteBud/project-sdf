@@ -2,6 +2,7 @@
 
 namespace SDF\Library;
 use SDF\Library\Session;
+use SDF\Library\Flash\Message;
 
 /**
  * Copyright 2024 Devsimsek & The NoteBud Backend Team
@@ -33,12 +34,7 @@ class Flash
 
     // Allowed Types
     // @var []string
-    protected static array $allowedTypes = [
-        "info",
-        "success",
-        "warning",
-        "error",
-    ];
+    public static array $allowedTypes = ["info", "success", "warning", "error"];
 
     public function __construct()
     {

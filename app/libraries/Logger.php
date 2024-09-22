@@ -143,13 +143,13 @@ class Log
 {
     public function __construct(
         // Log Message
-        protected string $message,
+        public string $message,
 
         // Log Type
-        protected string $type,
+        public string $type,
 
         // Log Time
-        protected int $time
+        public int $time
     ) {
         // Changed to int for timestamps
     }

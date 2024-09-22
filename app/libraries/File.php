@@ -24,7 +24,7 @@ namespace SDF\Library;
  * @url         https://github.com/NoteBud/project-sdf/
  * @filesource
  */
-class Session
+class File
 {
     // r/w
 
