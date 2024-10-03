@@ -39,12 +39,20 @@ class Flash
 
     public function __construct()
     {
+        Flash::init();
+    }
+
+    // Initialize the Flash Message
+    // @return void
+    public static function init(): void
+    {
         // initialize session
-        Session::init();
+        Session::start();
 
         // check if the flash key exists at the session storage, if not create it
         if (!Session::has("flash")) {
-            Session::set("flash", []);
+            print_r("Init Called.");
+            Session::w("flash", []);
         }
     }
 
@@ -88,7 +96,7 @@ class Flash
     // @return void
     protected static function save(): void
     {
-        Session::set("flash", self::$flash);
+        Session::w("flash", self::$flash);
     }
 }
 

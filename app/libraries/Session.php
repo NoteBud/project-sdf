@@ -2,6 +2,8 @@
 
 namespace SDF\Library;
 
+use InvalidArgumentException;
+
 /**
  * Copyright 2024 Devsimsek & The NoteBud Backend Team
  *
@@ -26,110 +28,142 @@ namespace SDF\Library;
  */
 class Session
 {
-    // The session array
-    // This array will be used to store and process session data
-    // @var array
-    protected static array $session = [];
-
-    // The temporary session array
-    // This array will be used to store and process temporary session data
-    // @var array
+    protected static int $SESSION_AGE = 1800;
     protected static array $temp = [];
 
-    public function __construct()
+    /**
+     * Starts or resumes a session.
+     *
+     * @return boolean Returns true upon success and false upon failure.
+     */
+    public static function start(): bool
     {
-        self::init();
+        self::_init();
+        return true;
     }
 
-    // Initialize the session
-    // This function will be used to initialize the session
-    // @return void
-    public static function init(): void
+    /**
+     * Writes a value to the current session data.
+     *
+     * @param string $key String identifier.
+     * @param mixed $value Single value or array of values to be written.
+     * @return mixed Value or array of values written.
+     * @throws InvalidArgumentException Session key is not a string value.
+     */
+    public static function w(string $key, mixed $value): mixed
     {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if (empty($_SESSION)) {
-            $_SESSION = [];
-        }
-
-        self::$session = $_SESSION;
-        self::$temp = self::$session;
-    }
-
-    // Set a session value
-    // This function will be used to set a session value
-    // @param string $key The session key
-    // @param mixed $value The session value
-    // @return void
-    public static function set(string $key, $value): void
-    {
+        self::_init();
         self::$temp[$key] = $value;
+        self::_age();
+        return $value;
     }
 
-    // Get a session value
-    // This function will be used to get a session value
-    // @param string $key The session key
-    // @return mixed
-    public static function get(string $key)
+    /**
+     * Reads a specific value from the current session data.
+     *
+     * @param string $key String identifier.
+     * @return mixed Returns a string value upon success. Returns false upon failure.
+     * @throws InvalidArgumentException Session key is not a string value.
+     */
+    public static function r(string $key): mixed
     {
-        return self::$temp[$key] ?? null;
+        self::_init();
+        if (isset(self::$temp[$key])) {
+            self::_age();
+            return self::$temp[$key];
+        }
+        return false;
     }
 
-    // Remove a session value
-    // This function will be used to remove a session value
-    // @param string $key The session key
-    // @return void
-    public static function remove(string $key): void
+    /**
+     * Deletes a value from the current session data.
+     *
+     * @param string $key String identifying the array key to delete.
+     * @return void
+     * @throws InvalidArgumentException Session key is not a string value.
+     */
+    public static function d(string $key): void
     {
+        self::_init();
         unset(self::$temp[$key]);
+        self::_age();
     }
 
-    // Check existence of a session value
-    // This function will be used to check the existence of a session value
-    // @param string $key The session key
-    // @return bool
+    /**
+     * Checks the existence of a session value.
+     *
+     * @param string $key The session key.
+     * @return bool
+     */
     public static function has(string $key): bool
     {
         return !empty(self::$temp[$key]) || isset(self::$temp[$key]);
     }
 
-    // Save the session
-    // This function will be used to save the session
-    // @return void
+    /**
+     * Saves the session.
+     *
+     * @return void
+     */
     public static function save(): void
     {
         $_SESSION = self::$temp;
     }
 
-    // Destroy the session
-    // This function will be used to destroy the session
-    // @return void
+    /**
+     * Destroys the current session.
+     *
+     * @return void
+     */
     public static function destroy(): void
     {
-        session_destroy();
+        if (session_id() !== "") {
+            $_SESSION = [];
+            session_destroy();
+        }
     }
 
-    // Regenerate the session
-    // This function will be used to regenerate the session
-    // @return void
-    public static function reinstiate(): void
+    /**
+     * Initializes a new session.
+     *
+     * @return void
+     */
+    private static function _init(): void
     {
-        if (session_status() == PHP_SESSION_ACTIVE) {
+        if (session_status() === PHP_SESSION_DISABLED) {
+            throw new \RuntimeException("Sessions are disabled.");
+        }
+        if (session_id() === "") {
+            session_start();
+            self::$temp = &$_SESSION;
+        }
+    }
+
+    /**
+     * Expires a session if it has been inactive for a specified amount of time.
+     *
+     * @return void
+     * @throws RuntimeException Session has expired.
+     */
+    private static function _age()
+    {
+        $last = $_SESSION["LAST_ACTIVE"] ?? false;
+
+        if (false !== $last && time() - $last > self::$SESSION_AGE) {
             self::destroy();
-            self::init();
+            throw new \RuntimeException("Session has expired.");
         }
+        $_SESSION["LAST_ACTIVE"] = time();
     }
 
-    // Destructor
-    // This function will be used to update the session
-    // @return void
-    public function __destruct()
+    /**
+     * Dumps current session data.
+     *
+     * @return void
+     */
+    public static function dump(): void
     {
-        // If the session is not equal to the temp variable, update the session
-        if (self::$session !== self::$temp) {
-            self::save();
-        }
+        self::_init();
+        echo nl2br(print_r($_SESSION, true));
     }
 }
