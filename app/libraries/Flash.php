@@ -1,6 +1,7 @@
 <?php
 
 namespace SDF\Library;
+
 use SDF\Library\Session;
 use SDF\Library\Flash\Message;
 
@@ -76,6 +77,13 @@ class Flash
         return $m;
     }
 
+    // Check if the Flash Message Exists
+    // @return bool
+    public static function has(): bool
+    {
+        return !empty(self::$flash);
+    }
+
     // Save the Flash Message
     // @return void
     protected static function save(): void
@@ -85,6 +93,7 @@ class Flash
 }
 
 namespace SDF\Library\Flash;
+
 use SDF\Library\Flash;
 
 // Message Class
