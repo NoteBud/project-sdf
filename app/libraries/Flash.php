@@ -53,6 +53,8 @@ class Flash
         if (!Session::has("flash")) {
             print_r("Init Called.");
             Session::w("flash", []);
+        } else {
+            self::$flash = Session::r("flash");
         }
     }
 
