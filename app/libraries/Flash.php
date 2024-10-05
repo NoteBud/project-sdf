@@ -51,7 +51,6 @@ class Flash
 
         // check if the flash key exists at the session storage, if not create it
         if (!Session::has("flash")) {
-            print_r("Init Called.");
             Session::w("flash", []);
         } else {
             self::$flash = Session::r("flash");
@@ -83,6 +82,8 @@ class Flash
         $m = self::$flash;
 
         self::$flash = array_filter(self::$flash, fn($m) => $m->persistent);
+
+        self::save();
 
         return $m;
     }
